@@ -1,0 +1,77 @@
+﻿<!-- SelectFolder.cshtml -->
+@model FolderViewModel
+
+@using (Html.BeginForm("SelectFolder", "Home", FormMethod.Post))
+{
+    <input type="text" id="sourFolderPath" name="SourFolderPath" />
+    <input type="button" value="Select Folder" onclick="selectFolder()" />
+
+    <input type="text" id="desFolderPath" name="DesFolderPath"  />
+    <input type="button" value="Select Folder" onclick="desFolder()" />
+
+    <input type="submit" value="Submit"  />
+}
+
+
+
+<script>
+    function selectFolder() {
+        var folderInput = document.createElement('input');
+        folderInput.setAttribute('type', 'file');
+        folderInput.setAttribute('webkitdirectory', true);
+        folderInput.setAttribute('directory', true);
+        folderInput.setAttribute('multiple', true);
+        folderInput.style.display = 'none';
+
+        folderInput.addEventListener('change', function (e) {
+            var selectedFolder = e.target.files[0].webkitRelativePath.split("/")[0];
+            document.getElementById('sourFolderPath').value = selectedFolder;
+        });
+
+        document.body.appendChild(folderInput);
+        folderInput.click();
+
+        var selectedFolderPath = document.getElementById("sourFolderPath").value;
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SelectFolder", "Home")',
+            data: { selectedFolderPath: selectedFolderPath },
+            success: function (result) {
+                document.getElementById("rootDirectory").innerText = result.rootDirectory;
+                document.getElementById("fullProjectPath").innerText = result.fullProjectPath;
+            }
+        });
+    }
+
+    function desFolder() {
+        var folderInput = document.createElement('input');
+        folderInput.setAttribute('type', 'file');
+        folderInput.setAttribute('webkitdirectory', true);
+        folderInput.setAttribute('directory', true);
+        folderInput.setAttribute('multiple', true);
+        folderInput.style.display = 'none';
+
+        folderInput.addEventListener('change', function (e) {
+            var selectedFolder = e.target.files[0].webkitRelativePath.split("/")[0];
+            document.getElementById('desFolderPath').value = selectedFolder;
+        });
+
+        document.body.appendChild(folderInput);
+        folderInput.click();
+    }
+
+    function displayPath() {
+        var selectedFolderPath = document.getElementById("sourFolderPath").value;
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("SelectFolder", "Home")',
+            data: { selectedFolderPath: selectedFolderPath },
+            success: function (result) {
+                document.getElementById("rootDirectory").innerText = result.rootDirectory;
+                document.getElementById("fullProjectPath").innerText = result.fullProjectPath;
+            }
+        });
+    }
+</script>

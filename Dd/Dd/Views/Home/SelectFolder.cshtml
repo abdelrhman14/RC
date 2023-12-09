@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<script>
+    function displayPath() {
+        var selectedFolderPath = document.getElementById("folderInput").value;
+
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetProjectPaths", "Home")',
+            data: { selectedFolderPath: selectedFolderPath },
+            success: function (result) {
+                document.getElementById("rootDirectory").innerText = result.rootDirectory;
+                document.getElementById("fullProjectPath").innerText = result.fullProjectPath;
+            }
+        });
+    }
+</script>
+
+<div>
+    <h2>Select Folder:</h2>
+    <input type="file" id="folderInput" webkitdirectory directory multiple onchange="displayPath()" />
+</div>
+<div>
+    <h2>Root Directory:</h2>
+    <p id="rootDirectory"></p>
+</div>
+<div>
+    <h2>Full Project Path:</h2>
+    <p id="fullProjectPath"></p>
+</div>
+
+
